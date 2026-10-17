@@ -1,0 +1,149 @@
+@import "tailwindcss";
+
+/*
+  Off the Page — token block.
+  Colour: warm cream + near-black trailer-paint ground, four accents (teal / burnt-orange /
+  golden-yellow / tomato-red) lifted from the client's own artwork, used sparingly as the
+  "route line" signature device — never as a background wash or gradient.
+  Type: Bricolage Grotesque (display) + Hanken Grotesk (body/UI) — no Inter.
+  Signature device: the route line, a 3-segment 3px stripe; see components/RouteLine.tsx.
+*/
+
+:root {
+  --cream: #f3e7cc;
+  --cream-high: #faf3e3;
+  --ink: #17130f;
+  --ink-soft: #4a4337;
+  --line: #d9c9a3;
+  --line-dark: #332c22;
+  --teal: #166b64;
+  --burnt-orange: #b85a1e;
+  --golden-yellow: #d99a2b;
+  --tomato-red: #b33b24;
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --dur-fast: 150ms;
+  --dur: 250ms;
+}
+
+@theme inline {
+  --color-cream: var(--cream);
+  --color-cream-high: var(--cream-high);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-line: var(--line);
+  --color-line-dark: var(--line-dark);
+  --color-teal: var(--teal);
+  --color-burnt-orange: var(--burnt-orange);
+  --color-golden-yellow: var(--golden-yellow);
+  --color-tomato-red: var(--tomato-red);
+
+  --font-display: var(--font-bricolage);
+  --font-body: var(--font-hanken);
+}
+
+/* Unlayered rules always beat Tailwind's @layer utilities regardless of source order, so every
+   reset rule that a utility class (text-*, bg-*, etc.) needs to be able to override must live in
+   @layer base — otherwise "a { color: inherit }" would always win over e.g. a cream CTA button. */
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 88px;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: var(--font-body), system-ui, sans-serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  p,
+  ul,
+  ol {
+    margin: 0;
+  }
+
+  ul,
+  ol {
+    padding: 0;
+    list-style: none;
+  }
+
+  img {
+    max-width: 100%;
+    display: block;
+  }
+
+  button {
+    font: inherit;
+    color: inherit;
+  }
+
+  a {
+    color: inherit;
+  }
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+:focus-visible {
+  outline: 2.5px solid var(--teal);
+  outline-offset: 3px;
+}
+
+.on-ink :focus-visible {
+  outline-color: var(--golden-yellow);
+}
+
+.skip-link {
+  position: absolute;
+  left: 16px;
+  top: -60px;
+  background: var(--ink);
+  color: var(--cream);
+  padding: 10px 16px;
+  z-index: 100;
+  transition: top var(--dur) var(--ease);
+  font-weight: 600;
+}
+
+.skip-link:focus {
+  top: 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+      opacity var(--dur) var(--ease),
+      transform var(--dur) var(--ease);
+  }
+
+  [data-reveal].is-in {
+    opacity: 1;
+    transform: none;
+  }
+}
