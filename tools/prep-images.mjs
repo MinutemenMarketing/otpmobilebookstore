@@ -1,15 +1,19 @@
 // Builds public/images from tools/originals. Run with: node tools/prep-images.mjs
 import sharp from "sharp";
-import { mkdir } from "node:fs/promises";
+import toIco from "to-ico";
+import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ORIGINALS = path.join(__dirname, "originals");
 const OUT = path.join(__dirname, "..", "public", "images");
+const ICONS_OUT = path.join(__dirname, "..", "public", "icons");
+const APP_DIR = path.join(__dirname, "..", "app");
 
 async function ensureOut() {
   await mkdir(OUT, { recursive: true });
+  await mkdir(ICONS_OUT, { recursive: true });
 }
 
 async function widths(srcPath, name, sizes, { quality = 82 } = {}) {
@@ -89,6 +93,45 @@ async function run() {
     .webp({ quality: 90 })
     .toFile(path.join(OUT, "tee-back-1408.webp"));
 
+  // Header wordmark — full horizontal lockup, transparent bg, padding trimmed to the real
+  // artwork bounds so it isn't scaled down by invisible margin.
+  const logoHorizontalTrimmed = await sharp(path.join(ORIGINALS, "logo-horizontal.webp"))
+    .trim({ threshold: 10 })
+    .toBuffer();
+  const logoHorizontalMeta = await sharp(logoHorizontalTrimmed).metadata();
+  for (const w of [600, 900, 1200]) {
+    await sharp(logoHorizontalTrimmed)
+      .resize({ width: w })
+      .webp({ quality: 92 })
+      .toFile(path.join(OUT, `logo-horizontal-${w}.webp`));
+  }
+
+  // Favicon mark — the page-and-road portion of the same artwork, already cropped square-ish
+  // in tools/originals/favicon-mark.png (no lettering). Pad to a true square on a transparent
+  // canvas, then render every icon size from that one square source.
+  const markMeta = await sharp(path.join(ORIGINALS, "favicon-mark.png")).metadata();
+  const side = Math.max(markMeta.width, markMeta.height);
+  const squareMark = await sharp(path.join(ORIGINALS, "favicon-mark.png"))
+    .resize({
+      width: side,
+      height: side,
+      fit: "contain",
+      background: { r: 0, g: 0, b: 0, alpha: 0 },
+    })
+    .toBuffer();
+
+  const icoSizes = [16, 32, 48];
+  const icoPngs = await Promise.all(
+    icoSizes.map((s) => sharp(squareMark).resize(s, s).png().toBuffer()),
+  );
+  const icoBuffer = await toIco(icoPngs);
+  await writeFile(path.join(APP_DIR, "favicon.ico"), icoBuffer);
+
+  await sharp(squareMark).resize(180, 180).png().toFile(path.join(APP_DIR, "apple-icon.png"));
+  await sharp(squareMark).resize(512, 512).png().toFile(path.join(APP_DIR, "icon.png"));
+  await sharp(squareMark).resize(192, 192).png().toFile(path.join(ICONS_OUT, "icon-192.png"));
+  await sharp(squareMark).resize(512, 512).png().toFile(path.join(ICONS_OUT, "icon-512.png"));
+
   // Open Graph image: logo artwork centered on cream canvas.
   const ogLogo = await sharp(logoBuf).resize({ height: 560, fit: "inside" }).toBuffer();
   await sharp({ create: { width: 1200, height: 630, channels: 4, background: "#F3E7CC" } })
@@ -97,6 +140,7 @@ async function run() {
     .jpeg({ quality: 88 })
     .toFile(path.join(OUT, "og-default.jpg"));
 
+  console.log("Header logo trimmed size:", logoHorizontalMeta.width, "x", logoHorizontalMeta.height);
   console.log("Image build complete →", OUT);
 }
 
