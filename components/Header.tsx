@@ -25,19 +25,19 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-cream/95 backdrop-blur supports-[backdrop-filter]:bg-cream/90">
       <div className="mx-auto flex h-[68px] max-w-[1280px] items-center justify-between gap-2 px-3 sm:gap-3 sm:px-4 md:h-[84px] md:px-12">
-        <Link href="/" className="shrink-0 transition-opacity hover:opacity-80">
+        <Link href="/" className="min-w-0 shrink-0 transition-opacity hover:opacity-80">
           <Image
             src="/images/logo-horizontal-900.webp"
             alt="Off the Page Mobile Bookstore"
             width={LOGO_WIDTH}
             height={LOGO_HEIGHT}
             priority
-            className="h-7 w-auto sm:h-10 md:h-12"
+            className="h-7 w-auto min-w-0 sm:h-10 md:h-12"
             sizes="(min-width: 768px) 210px, (min-width: 640px) 175px, 110px"
           />
         </Link>
 
-        <nav aria-label="Primary" className="flex-1">
+        <nav aria-label="Primary" className="min-w-0 flex-1">
           <ul className="flex items-center justify-center gap-2 sm:gap-6 md:gap-10">
             {NAV_ITEMS.map((item) => {
               const active = pathname === item.href;

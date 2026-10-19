@@ -34,8 +34,8 @@ export default function AboutPage() {
           <span className="mb-6 block font-body text-xs font-semibold uppercase tracking-[0.14em] text-cream/60">
             Trailer concept
           </span>
-          <div className="grid gap-5 md:grid-cols-12">
-            <div className="overflow-hidden border border-line-dark md:col-span-8">
+          <div className="grid min-w-0 gap-5 md:grid-cols-12">
+            <div className="min-w-0 overflow-hidden border border-line-dark md:col-span-8">
               <Image
                 src="/images/trailer-side-concept-1536.webp"
                 alt="Concept render of the Off the Page trailer, side view, black with the full logo and road graphic"
@@ -46,7 +46,7 @@ export default function AboutPage() {
                 className="h-auto w-full"
               />
             </div>
-            <div className="overflow-hidden border border-line-dark md:col-span-4">
+            <div className="min-w-0 overflow-hidden border border-line-dark md:col-span-4">
               <Image
                 src="/images/trailer-rear-concept-960.webp"
                 alt="Concept render of the Off the Page trailer, rear doors, with the full shield logo"

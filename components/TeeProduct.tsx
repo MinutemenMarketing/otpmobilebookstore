@@ -43,9 +43,9 @@ export function TeeProduct({ tee }: { tee: ApparelProduct }) {
   }
 
   return (
-    <div className="grid gap-10 md:grid-cols-12 md:gap-14">
-      <div className="flex flex-col gap-3 md:col-span-6">
-        <div className="relative flex aspect-square items-center justify-center border border-line bg-cream-high p-5 sm:aspect-[4/5] sm:p-8">
+    <div className="grid min-w-0 gap-10 md:grid-cols-12 md:gap-14">
+      <div className="flex min-w-0 flex-col gap-3 md:col-span-6">
+        <div className="relative flex min-w-0 aspect-square items-center justify-center border border-line bg-cream-high p-5 sm:aspect-[4/5] sm:p-8">
           <Image
             key={view}
             src={image.src}
@@ -54,11 +54,11 @@ export function TeeProduct({ tee }: { tee: ApparelProduct }) {
             height={image.height}
             sizes="(min-width: 768px) 440px, 90vw"
             priority
-            className="h-auto w-full max-w-[340px] object-contain"
+            className="h-auto w-full min-w-0 max-w-[340px] object-contain"
             data-reveal
           />
         </div>
-        <div className="flex gap-2" role="tablist" aria-label="Tee view">
+        <div className="flex min-w-0 gap-2" role="tablist" aria-label="Tee view">
           {(["front", "back"] as const).map((v) => (
             <button
               key={v}
@@ -66,7 +66,7 @@ export function TeeProduct({ tee }: { tee: ApparelProduct }) {
               role="tab"
               aria-selected={view === v}
               onClick={() => setView(v)}
-              className={`h-10 flex-1 border font-body text-sm font-semibold capitalize transition-colors ${
+              className={`h-10 min-w-0 flex-1 border font-body text-sm font-semibold capitalize transition-colors ${
                 view === v ? "border-ink bg-ink text-cream" : "border-line text-ink-soft hover:border-ink hover:text-ink"
               }`}
             >
@@ -76,7 +76,7 @@ export function TeeProduct({ tee }: { tee: ApparelProduct }) {
         </div>
       </div>
 
-      <div className="flex flex-col gap-6 md:col-span-6">
+      <div className="flex min-w-0 flex-col gap-6 md:col-span-6">
         <div className="flex flex-col gap-2">
           <h1 className="font-display text-3xl font-extrabold leading-tight text-ink md:text-4xl">
             {tee.name}

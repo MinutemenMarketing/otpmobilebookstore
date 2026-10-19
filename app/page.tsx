@@ -11,8 +11,8 @@ export default async function ShopPage() {
 
   return (
     <div className="mx-auto max-w-[1280px] px-4 md:px-12">
-      <section className="grid items-center gap-8 py-10 md:grid-cols-12 md:gap-10 md:py-16" data-reveal>
-        <div className="flex flex-col gap-5 md:col-span-7">
+      <section className="grid min-w-0 items-center gap-8 py-10 md:grid-cols-12 md:gap-10 md:py-16" data-reveal>
+        <div className="flex min-w-0 flex-col gap-5 md:col-span-7">
           <span className="font-body text-xs font-semibold uppercase tracking-[0.14em] text-ink-soft">
             Mobile bookstore
           </span>
@@ -37,7 +37,7 @@ export default async function ShopPage() {
         {featured && (
           <Link
             href={`/product/${featured.slug}`}
-            className="group relative flex items-center justify-center border border-line bg-cream-high p-6 md:col-span-5 md:p-10"
+            className="group relative flex min-w-0 items-center justify-center border border-line bg-cream-high p-6 md:col-span-5 md:p-10"
           >
             <span className="absolute left-4 top-4 font-body text-[11px] font-semibold uppercase tracking-wide text-ink-soft">
               Featured now

@@ -44,8 +44,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         <BackToShop />
       </div>
 
-      <div className="grid gap-10 md:grid-cols-12 md:gap-14">
-        <div className="flex items-start justify-center border border-line bg-cream-high p-6 md:col-span-5 md:p-10">
+      <div className="grid min-w-0 gap-10 md:grid-cols-12 md:gap-14">
+        <div className="flex min-w-0 items-start justify-center border border-line bg-cream-high p-6 md:col-span-5 md:p-10">
           <Image
             src={book.cover.src}
             alt={book.cover.alt}
@@ -53,11 +53,11 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             height={book.cover.height}
             sizes="(min-width: 768px) 360px, 80vw"
             priority
-            className="h-auto w-full max-w-[320px] object-contain"
+            className="h-auto w-full min-w-0 max-w-[320px] object-contain"
           />
         </div>
 
-        <div className="flex flex-col gap-6 md:col-span-7">
+        <div className="flex min-w-0 flex-col gap-6 md:col-span-7">
           <div className="flex flex-col gap-2">
             <div className="flex flex-wrap gap-1.5">
               {book.genres.map((g) => (

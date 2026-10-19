@@ -49,13 +49,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${bricolage.variable} ${hanken.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col bg-cream text-ink">
+      <body className="flex min-h-full min-w-0 flex-col bg-cream text-ink">
         <a href="#main" className="skip-link">
           Skip to content
         </a>
         <CartProvider>
           <Header />
-          <main id="main" className="flex-1">
+          <main id="main" className="min-w-0 flex-1">
             {children}
           </main>
           <Footer />

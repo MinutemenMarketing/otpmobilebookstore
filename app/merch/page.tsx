@@ -23,7 +23,7 @@ export default async function MerchPage() {
       </div>
 
       <section className="on-ink mt-12 border-y border-line-dark bg-ink py-14 text-cream md:py-20">
-        <div className="mx-auto flex max-w-[1280px] flex-col items-center gap-6 px-4 text-center md:px-12">
+        <div className="mx-auto flex min-w-0 max-w-[1280px] flex-col items-center gap-6 px-4 text-center md:px-12">
           <CheckerStrip />
           <Image
             src="/images/merch-badge-artwork-800.webp"
