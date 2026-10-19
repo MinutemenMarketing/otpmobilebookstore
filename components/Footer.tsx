@@ -68,6 +68,17 @@ export function Footer() {
         <div className="mt-10 flex flex-col gap-2 border-t border-line-dark pt-6 font-body text-xs text-cream/45 md:flex-row md:items-center md:justify-between">
           <span>&copy; {new Date().getFullYear()} Off the Page Mobile Bookstore</span>
           <span>otpmobilebookstore.com — coming soon</span>
+          <span>
+            Powered by{" "}
+            <a
+              href="https://minutemenmarketing.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-cream/70 underline-offset-2 hover:text-cream hover:underline"
+            >
+              Minutemen Marketing
+            </a>
+          </span>
         </div>
       </div>
     </footer>

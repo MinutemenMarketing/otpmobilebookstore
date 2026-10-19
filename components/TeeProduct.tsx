@@ -45,7 +45,7 @@ export function TeeProduct({ tee }: { tee: ApparelProduct }) {
   return (
     <div className="grid gap-10 md:grid-cols-12 md:gap-14">
       <div className="flex flex-col gap-3 md:col-span-6">
-        <div className="relative flex aspect-[4/5] items-center justify-center border border-line bg-cream-high p-8">
+        <div className="relative flex aspect-square items-center justify-center border border-line bg-cream-high p-5 sm:aspect-[4/5] sm:p-8">
           <Image
             key={view}
             src={image.src}
