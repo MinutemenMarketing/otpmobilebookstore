@@ -70,11 +70,13 @@ directions link) and it appears on `/events` automatically, in date order.
 
 ## Book catalog: what's published vs. what's pending review
 
-See `CATALOG_REVIEW.md` for the full sourcing notes on the 14 books reconciled from the
-client's supplier screenshots. Short version: real title/author/ISBN/cover data for all 14 (9
-with verified covers, 5 with a styled placeholder), but **no confirmed retail price for any of
-them**, so they're `status: "review"` in `lib/catalog.ts` — present in the codebase, excluded
-from the live shop. Flip to `"published"` with a real `formats` price once confirmed.
+See `CATALOG_REVIEW.md` for the full sourcing notes on all 106 books reconciled from the
+client's supplier screenshots (the complete ISBN/title order, across six screenshots). Short
+version: real title/author/ISBN data for all 106 (42 with verified covers, 64 with a styled
+placeholder; 87 with a confirmed author, 19 marked "Author to be confirmed"), but **no confirmed
+retail price or stock for any of them**, so they're all `status: "review"` in `lib/catalog.ts` —
+present in the codebase, excluded from the live shop. Flip to `"published"` with a real `formats`
+price once confirmed.
 
 ## What's needed before this takes real orders
 
@@ -90,7 +92,7 @@ from the live shop. Flip to `"published"` with a real `formats` price once confi
    marking an order fulfilled.
 6. Confirm and publish: founder/about story, contact email, service area & schedule, and connect
    `otpmobilebookstore.com`.
-7. Confirm retail prices (and stock) for the 14 `status: "review"` books so they can publish —
+7. Confirm retail prices (and stock) for the 106 `status: "review"` books so they can publish —
    see `CATALOG_REVIEW.md`.
 8. Set the three `MAILCHIMP_*` env vars above to turn on real newsletter signups.
 9. Confirm the first event date/venue to replace the Events empty state.

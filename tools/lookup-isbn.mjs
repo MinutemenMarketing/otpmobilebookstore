@@ -11,19 +11,37 @@ if (isbns.length === 0) {
   process.exit(1);
 }
 
-async function getJSON(url) {
-  const res = await fetch(url, { headers: { "User-Agent": "otp-catalog-lookup/1.0" } });
-  if (!res.ok) return null;
-  return res.json();
+async function getJSON(url, attempt = 1) {
+  try {
+    const res = await fetch(url, { headers: { "User-Agent": "otp-catalog-lookup/1.0" } });
+    if (!res.ok) return null;
+    return res.json();
+  } catch (err) {
+    if (attempt >= 3) {
+      console.error(`  (network error fetching ${url}, giving up: ${err.message})`);
+      return null;
+    }
+    await new Promise((r) => setTimeout(r, 500 * attempt));
+    return getJSON(url, attempt + 1);
+  }
 }
 
-async function saveCoverIfReal(coverId, isbn) {
-  const res = await fetch(`https://covers.openlibrary.org/b/id/${coverId}-L.jpg`);
-  const buf = await res.arrayBuffer();
-  if (buf.byteLength <= 1000) return false; // Open Library's 1x1 "no cover" placeholder
-  await mkdir("tools/originals/catalog", { recursive: true });
-  await writeFile(`tools/originals/catalog/${isbn}.jpg`, Buffer.from(buf));
-  return true;
+async function saveCoverIfReal(coverId, isbn, attempt = 1) {
+  try {
+    const res = await fetch(`https://covers.openlibrary.org/b/id/${coverId}-L.jpg`);
+    const buf = await res.arrayBuffer();
+    if (buf.byteLength <= 1000) return false; // Open Library's 1x1 "no cover" placeholder
+    await mkdir("tools/originals/catalog", { recursive: true });
+    await writeFile(`tools/originals/catalog/${isbn}.jpg`, Buffer.from(buf));
+    return true;
+  } catch (err) {
+    if (attempt >= 3) {
+      console.error(`  (network error fetching cover ${coverId}, giving up: ${err.message})`);
+      return false;
+    }
+    await new Promise((r) => setTimeout(r, 500 * attempt));
+    return saveCoverIfReal(coverId, isbn, attempt + 1);
+  }
 }
 
 async function lookup(isbn) {
