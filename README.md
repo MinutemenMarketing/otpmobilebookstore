@@ -42,6 +42,40 @@ component, only `lib/commerce/index.ts`.
 in `tools/originals/`, run the prep script, point `cover.src` at the built file) — it appears in the
 shop grid, search, filters, and gets its own `/product/[slug]` page automatically.
 
+## Newsletter signup
+
+`lib/newsletter.ts` is a server action written against the **Mailchimp Marketing API** — the
+most common small-business choice, and the client manages contacts/campaigns/unsubscribes
+entirely from Mailchimp's own dashboard, no code needed on her end. It is **not connected**: no
+API key is configured, so the form currently shows an honest "not connected yet" state and never
+claims a subscriber was saved.
+
+To go live, set these server-only env vars (never `NEXT_PUBLIC_`, never sent to the client):
+
+| Variable | Where to find it |
+|---|---|
+| `MAILCHIMP_API_KEY` | Mailchimp → Account → Extras → API keys |
+| `MAILCHIMP_SERVER_PREFIX` | The suffix on that key, e.g. `us21` |
+| `MAILCHIMP_AUDIENCE_ID` | Mailchimp → Audience → Settings → Audience name and defaults |
+
+Once set, signups use double opt-in (Mailchimp emails the subscriber to confirm) and the
+"Member Exists" case is treated as success so existing subscribers aren't shown an error.
+
+## Events
+
+`lib/events.ts` is the source of truth — currently empty, since no dates have been confirmed.
+`getUpcomingEvents()` auto-excludes anything before today, so adding a past-dated entry by
+mistake can't surface it. Add an object to the `events` array (date, time, venue, address,
+directions link) and it appears on `/events` automatically, in date order.
+
+## Book catalog: what's published vs. what's pending review
+
+See `CATALOG_REVIEW.md` for the full sourcing notes on the 14 books reconciled from the
+client's supplier screenshots. Short version: real title/author/ISBN/cover data for all 14 (9
+with verified covers, 5 with a styled placeholder), but **no confirmed retail price for any of
+them**, so they're `status: "review"` in `lib/catalog.ts` — present in the codebase, excluded
+from the live shop. Flip to `"published"` with a real `formats` price once confirmed.
+
 ## What's needed before this takes real orders
 
 1. **Pick a commerce/POS provider.** Shopify (Storefront API + hosted Checkout, or POS Go for
@@ -54,8 +88,12 @@ shop grid, search, filters, and gets its own `/product/[slug]` page automaticall
 4. Replace the demo checkout's simulated shipping/tax line with the provider's real quote.
 5. Verify completed payments via the provider's server-side webhook/confirmation flow before ever
    marking an order fulfilled.
-6. Confirm and publish: founder/about story, contact email, service area & schedule, real book
-   prices/ISBNs, and connect `otpmobilebookstore.com`.
+6. Confirm and publish: founder/about story, contact email, service area & schedule, and connect
+   `otpmobilebookstore.com`.
+7. Confirm retail prices (and stock) for the 14 `status: "review"` books so they can publish —
+   see `CATALOG_REVIEW.md`.
+8. Set the three `MAILCHIMP_*` env vars above to turn on real newsletter signups.
+9. Confirm the first event date/venue to replace the Events empty state.
 
 ## Known demo limitations (by design, not bugs)
 
