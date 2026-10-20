@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { RouteLine } from "./RouteLine";
 import { InstagramIcon, TikTokIcon } from "./icons";
+import { NewsletterSignup } from "./NewsletterSignup";
 
 export function Footer() {
   return (
@@ -34,6 +35,11 @@ export function Footer() {
                   Merch
                 </Link>
               </li>
+              <li>
+                <Link href="/events" className="text-cream/80 hover:text-cream">
+                  Events
+                </Link>
+              </li>
             </ul>
           </nav>
 
@@ -63,6 +69,8 @@ export function Footer() {
             </div>
             <span className="font-body text-xs text-cream/50">@offthepagebook_club</span>
           </div>
+
+          <NewsletterSignup variant="dark" className="w-full max-w-[360px]" />
         </div>
 
         <div className="mt-10 flex flex-col gap-2 border-t border-line-dark pt-6 font-body text-xs text-cream/45 md:flex-row md:items-center md:justify-between">

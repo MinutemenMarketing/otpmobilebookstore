@@ -3,11 +3,12 @@ import Link from "next/link";
 import { commerce } from "@/lib/commerce";
 import { ShopCatalog } from "@/components/ShopCatalog";
 import { RouteLine } from "@/components/RouteLine";
+import { BookCoverPlaceholder } from "@/components/BookCoverPlaceholder";
 import { formatCents } from "@/lib/money";
 
 export default async function ShopPage() {
   const [books, genres] = await Promise.all([commerce.listBooks(), commerce.listGenres()]);
-  const featured = books[0];
+  const featured = books.find((b) => b.cover) ?? books[0];
 
   return (
     <div className="mx-auto max-w-[1280px] px-4 md:px-12">
@@ -42,16 +43,24 @@ export default async function ShopPage() {
             <span className="absolute left-4 top-4 font-body text-[11px] font-semibold uppercase tracking-wide text-ink-soft">
               Featured now
             </span>
-            <Image
-              src={featured.cover.src}
-              alt={featured.cover.alt}
-              width={featured.cover.width}
-              height={featured.cover.height}
-              sizes="(min-width: 768px) 320px, 70vw"
-              priority
-              fetchPriority="high"
-              className="h-auto w-[200px] object-contain shadow-[0_18px_36px_-18px_rgba(23,19,15,0.45)] transition-transform duration-[var(--dur)] group-hover:-translate-y-1 sm:w-[240px]"
-            />
+            {featured.cover ? (
+              <Image
+                src={featured.cover.src}
+                alt={featured.cover.alt}
+                width={featured.cover.width}
+                height={featured.cover.height}
+                sizes="(min-width: 768px) 320px, 70vw"
+                priority
+                fetchPriority="high"
+                className="h-auto w-[200px] object-contain shadow-[0_18px_36px_-18px_rgba(23,19,15,0.45)] transition-transform duration-[var(--dur)] group-hover:-translate-y-1 sm:w-[240px]"
+              />
+            ) : (
+              <BookCoverPlaceholder
+                title={featured.title}
+                author={featured.author}
+                className="w-[200px] sm:w-[240px]"
+              />
+            )}
           </Link>
         )}
       </section>

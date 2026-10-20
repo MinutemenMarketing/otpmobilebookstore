@@ -1,7 +1,7 @@
 // Builds public/images from tools/originals. Run with: node tools/prep-images.mjs
 import sharp from "sharp";
 import toIco from "to-ico";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, writeFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -131,6 +131,29 @@ async function run() {
   await sharp(squareMark).resize(512, 512).png().toFile(path.join(APP_DIR, "icon.png"));
   await sharp(squareMark).resize(192, 192).png().toFile(path.join(ICONS_OUT, "icon-192.png"));
   await sharp(squareMark).resize(512, 512).png().toFile(path.join(ICONS_OUT, "icon-512.png"));
+
+  // Supplier catalog covers — one real cover per ISBN, downloaded by tools/lookup-isbn.mjs into
+  // tools/originals/catalog/. Aspect preserved, no crop, same width set as the demo book cover.
+  const catalogDir = path.join(ORIGINALS, "catalog");
+  let catalogFiles = [];
+  try {
+    catalogFiles = (await readdir(catalogDir)).filter((f) => f.endsWith(".jpg"));
+  } catch {
+    // no catalog covers yet
+  }
+  if (catalogFiles.length > 0) {
+    await mkdir(path.join(OUT, "catalog"), { recursive: true });
+    for (const file of catalogFiles) {
+      const isbn = file.replace(/\.jpg$/, "");
+      for (const w of [350, 525, 700]) {
+        await sharp(path.join(catalogDir, file))
+          .resize({ width: w })
+          .webp({ quality: 88 })
+          .toFile(path.join(OUT, "catalog", `${isbn}-${w}.webp`));
+      }
+    }
+    console.log(`Processed ${catalogFiles.length} catalog cover(s).`);
+  }
 
   // Open Graph image: logo artwork centered on cream canvas.
   const ogLogo = await sharp(logoBuf).resize({ height: 560, fit: "inside" }).toBuffer();

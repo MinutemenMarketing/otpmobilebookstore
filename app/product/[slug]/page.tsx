@@ -5,6 +5,7 @@ import { commerce } from "@/lib/commerce";
 import { BackToShop } from "@/components/BackToShop";
 import { BookPurchasePanel } from "@/components/BookPurchasePanel";
 import { CollapsibleDetails } from "@/components/CollapsibleDetails";
+import { BookCoverPlaceholder } from "@/components/BookCoverPlaceholder";
 
 export async function generateStaticParams() {
   const books = await commerce.listBooks();
@@ -22,7 +23,7 @@ export async function generateMetadata({
   return {
     title: book.title,
     description: book.synopsis,
-    openGraph: { images: [{ url: book.cover.src }] },
+    openGraph: book.cover ? { images: [{ url: book.cover.src }] } : undefined,
   };
 }
 
@@ -46,15 +47,19 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
       <div className="grid min-w-0 gap-10 md:grid-cols-12 md:gap-14">
         <div className="flex min-w-0 items-start justify-center border border-line bg-cream-high p-6 md:col-span-5 md:p-10">
-          <Image
-            src={book.cover.src}
-            alt={book.cover.alt}
-            width={book.cover.width}
-            height={book.cover.height}
-            sizes="(min-width: 768px) 360px, 80vw"
-            priority
-            className="h-auto w-full min-w-0 max-w-[320px] object-contain"
-          />
+          {book.cover ? (
+            <Image
+              src={book.cover.src}
+              alt={book.cover.alt}
+              width={book.cover.width}
+              height={book.cover.height}
+              sizes="(min-width: 768px) 360px, 80vw"
+              priority
+              className="h-auto w-full min-w-0 max-w-[320px] object-contain"
+            />
+          ) : (
+            <BookCoverPlaceholder title={book.title} author={book.author} className="max-w-[320px] border-0" />
+          )}
         </div>
 
         <div className="flex min-w-0 flex-col gap-6 md:col-span-7">

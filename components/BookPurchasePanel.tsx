@@ -85,7 +85,7 @@ export function BookPurchasePanel({ book }: { book: Book }) {
             variantLabel: format.label,
             unitPriceCents: format.priceCents,
             quantity,
-            image: book.cover,
+            image: book.cover ?? { src: "/icon.png", width: 512, height: 512, alt: "" },
             href,
           })
         }

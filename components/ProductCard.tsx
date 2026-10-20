@@ -6,6 +6,11 @@ import type { Book } from "@/lib/types";
 import { useCart } from "@/lib/cart-context";
 import { formatCents } from "@/lib/money";
 import { AddToCartButton } from "./AddToCartButton";
+import { BookCoverPlaceholder } from "./BookCoverPlaceholder";
+
+// Books without a verified cover are never published (see CATALOG_REVIEW.md), so this is a
+// type-safety fallback only — it should never actually render in the cart drawer.
+const PLACEHOLDER_CART_IMAGE = { src: "/icon.png", width: 512, height: 512, alt: "" };
 
 export function ProductCard({ book }: { book: Book }) {
   const { addLine } = useCart();
@@ -16,13 +21,17 @@ export function ProductCard({ book }: { book: Book }) {
   return (
     <article className="group flex flex-col border border-line bg-cream-high transition-colors hover:border-ink">
       <Link href={href} className="relative block aspect-[3/4] overflow-hidden bg-cream">
-        <Image
-          src={book.cover.src}
-          alt={book.cover.alt}
-          fill
-          sizes="(min-width: 1024px) 23vw, (min-width: 640px) 45vw, 90vw"
-          className="object-contain p-4 transition-transform duration-[var(--dur)] group-hover:scale-[1.02]"
-        />
+        {book.cover ? (
+          <Image
+            src={book.cover.src}
+            alt={book.cover.alt}
+            fill
+            sizes="(min-width: 1024px) 23vw, (min-width: 640px) 45vw, 90vw"
+            className="object-contain p-4 transition-transform duration-[var(--dur)] group-hover:scale-[1.02]"
+          />
+        ) : (
+          <BookCoverPlaceholder title={book.title} author={book.author} className="absolute inset-0 border-0" />
+        )}
       </Link>
       <div className="flex flex-1 flex-col gap-2 p-4">
         <div className="flex flex-wrap gap-1.5">
@@ -59,7 +68,7 @@ export function ProductCard({ book }: { book: Book }) {
                 variantLabel: defaultFormat.label,
                 unitPriceCents: defaultFormat.priceCents,
                 quantity: 1,
-                image: book.cover,
+                image: book.cover ?? PLACEHOLDER_CART_IMAGE,
                 href,
               })
             }
